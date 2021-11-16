@@ -820,8 +820,9 @@ namespace Labyrinth
                     //Wiederholung der While Schleife
                 }
             }
-            BesuchteFelder_links = besuchteFelder_links;
-            BesuchteFelder_links_counter = besuchteFelder_links_counter;
+            Block[] ausgabe_links = Bereite_BesuchtenWegAuf(besuchteFelder_links);
+            BesuchteFelder_links = ausgabe_links;
+            BesuchteFelder_links_counter = ausgabe_links.Length;
             
             (int y, int x) Konvertiere_Richtung_zu_Bewegung(int Richtung)
             {
@@ -844,6 +845,49 @@ namespace Labyrinth
                 }
                 return fortbewegung;
             }
+        }
+
+        private Block[] Bereite_BesuchtenWegAuf(Block[] besuchterWeg)
+        {
+            IEnumerable<Block> besuchterWeg_Ien= besuchterWeg.Where(x => x != null);
+            List<Block> besuchterWeg_Liste = besuchterWeg_Ien.ToList();
+            int besuchterWeg_Liste_index = 0;
+            while (besuchterWeg_Liste_index < besuchterWeg_Liste.Count)
+            {
+                List<(Block block, int index)> gefundeneBloecke = new List<(Block block, int index)>();
+                int gefundeneBloecke_index = 0;
+
+                for (int i = 0; i < besuchterWeg_Liste.Count; i++)
+                {
+                    if (besuchterWeg_Liste[i].pos_y == besuchterWeg_Liste[besuchterWeg_Liste_index].pos_y && besuchterWeg_Liste[i].pos_x == besuchterWeg_Liste[besuchterWeg_Liste_index].pos_x)
+                    {
+                        gefundeneBloecke.Add((besuchterWeg_Liste[i], i));
+                        gefundeneBloecke_index++;
+                    }
+                }
+
+
+                //IEnumerable<Block> treffer = besuchterWeg_Liste.Where(block => block.pos_y == besuchterWeg_Liste[aktuellerindex].pos_y && block.pos_x == besuchterWeg_Liste[aktuellerindex].pos_x);
+                //int count = treffer.Count();
+
+                if (gefundeneBloecke.Count > 1)
+                {
+
+                    //ein Block ist mehr als einmal vorhanden
+                    Block value = gefundeneBloecke[0].block;
+                    int start = gefundeneBloecke[0].index;
+                    int ende = gefundeneBloecke[1].index;
+                    int anzahl = ende - start;
+                    for (int i = 0; i < anzahl; i++)
+                    {
+                        besuchterWeg_Liste.RemoveAt(start + 1);
+                    }
+                    continue;
+                }
+                besuchterWeg_Liste_index++;
+            }
+            Block[] ausgabe_besuchterWeg = besuchterWeg_Liste.ToArray();
+            return ausgabe_besuchterWeg.ToArray();
         }
 
         public void Resize_Update_Properties()

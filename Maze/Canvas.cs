@@ -314,7 +314,7 @@ namespace Labyrinth
 
                     if (rnd > rahmen_Gewichtung) //Benutzung der zuletzt erstellten Blöcke
                     {
-                        int suchraum = Convert.ToInt32(verfuegbareBloecke.Count * 0.8);
+                        int suchraum = Convert.ToInt32(verfuegbareBloecke.Count * 0.95);
                         if (suchraum == verfuegbareBloecke.Count)
                         {
                             suchraum = 0;
@@ -377,6 +377,8 @@ namespace Labyrinth
                 #endregion
             }
         }
+
+        //private void Erstelle_Ast(Block block, int richtungPraeferenz)
 
         /// <summary>
         /// true => Weg ist frei, false => weg ist versperrt
